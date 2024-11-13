@@ -3,19 +3,26 @@
 
 echo "This is a prefix file for collision generation." > prefix.txt
 
-./md5collgen prefix.txt -o M.bin N.bin
+./md5collgen prefix.txt -o M.hex N.hex
+
+md5sum M.hex | awk '{print $1}' > M.hex.sum
+md5sum N.hex | awk '{print $1}' > N.hex.sum
+
+colordiff M.hex.sum N.hex.sum
 
 echo "This is the suffix T." > suffix.txt
 
-cat M.bin suffix.txt > M_T.bin
-cat N.bin suffix.txt > N_T.bin
+cat M.hex suffix.txt > M_T.hex
+cat N.hex suffix.txt > N_T.hex
 
-md5sum M_T.bin > M_T_hash.txt
-md5sum N_T.bin > N_T_hash.txt
+echo "Showing the binaries are different"
+colordiff N_T.hex M_T.hex
 
-echo "MD5 hash of (M + T):"
-cat M_T_hash.txt
-echo "MD5 hash of (N + T):"
-cat N_T_hash.txt
+echo "Showing the sums are the same"
+md5sum M_T.hex | awk '{print $1}' > M.hex.sum
+md5sum N_T.hex | awk '{print $1}' > N.hex.sum
 
-colordiff N_T_hash.txt M_T_hash.txt
+cat M.hex.sum
+cat N.hex.sum
+
+colordiff M.hex.sum N.hex.sum
